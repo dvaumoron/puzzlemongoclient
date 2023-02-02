@@ -1,2 +1,3 @@
 # puzzlemongoclient
-Common package to create MongoDB client.
+
+Common package to create [MongoDB](https://www.mongodb.com/) client.
