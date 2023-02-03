@@ -60,3 +60,26 @@ func ExtractBinary(value any) []byte {
 	binary, _ := value.(primitive.Binary)
 	return binary.Data
 }
+
+func ExtractStringMap(value any) map[string]string {
+	resMap := map[string]string{}
+	switch casted := value.(type) {
+	case bson.D:
+		for _, elem := range casted {
+			resMap[elem.Key], _ = elem.Value.(string)
+		}
+	case bson.M:
+		for key, innerValue := range casted {
+			resMap[key], _ = innerValue.(string)
+		}
+	}
+	return resMap
+}
+
+func ConvertSlice[T any](docs []bson.M, converter func(bson.M) T) []T {
+	resSlice := make([]T, 0, len(docs))
+	for _, doc := range docs {
+		resSlice = append(resSlice, converter(doc))
+	}
+	return resSlice
+}
