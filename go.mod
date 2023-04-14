@@ -2,7 +2,7 @@ module github.com/dvaumoron/puzzlemongoclient
 
 go 1.19
 
-require go.mongodb.org/mongo-driver v1.11.1
+require go.mongodb.org/mongo-driver v1.11.4
 
 require (
 	github.com/golang/snappy v0.0.1 // indirect
