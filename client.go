@@ -37,7 +37,7 @@ func Create() (*options.ClientOptions, string) {
 
 func Disconnect(client *mongo.Client, ctx context.Context) {
 	if err := client.Disconnect(ctx); err != nil {
-		log.Print("Error during MongoDB disconnect :", err)
+		log.Println("Error during MongoDB disconnect :", err)
 	}
 }
 
