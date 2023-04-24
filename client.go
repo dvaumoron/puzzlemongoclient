@@ -19,7 +19,6 @@ package puzzlemongoclient
 
 import (
 	"context"
-	"log"
 	"os"
 	"time"
 
@@ -27,6 +26,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.uber.org/zap"
 )
 
 func Create() (*options.ClientOptions, string) {
@@ -35,9 +35,9 @@ func Create() (*options.ClientOptions, string) {
 	return clientOptions, databaseName
 }
 
-func Disconnect(client *mongo.Client, ctx context.Context) {
+func Disconnect(client *mongo.Client, logger *zap.Logger, ctx context.Context) {
 	if err := client.Disconnect(ctx); err != nil {
-		log.Println("Error during MongoDB disconnect :", err)
+		logger.Error("Error during MongoDB disconnect", zap.Error(err))
 	}
 }
 
