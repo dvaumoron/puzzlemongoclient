@@ -18,24 +18,29 @@
 package puzzlemongoclient
 
 import (
-	"context"
 	"os"
 	"time"
 
+	"github.com/uptrace/opentelemetry-go-extra/otelzap"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo"
 	"go.uber.org/zap"
 )
 
+// Must be called after TracerProvider initialization.
 func Create() (*options.ClientOptions, string) {
-	clientOptions := options.Client().ApplyURI(os.Getenv("MONGODB_SERVER_ADDR"))
+	clientOptions := options.Client()
+	clientOptions.Monitor = otelmongo.NewMonitor()
+	clientOptions.ApplyURI(os.Getenv("MONGODB_SERVER_ADDR"))
 	databaseName := os.Getenv("MONGODB_SERVER_DB")
 	return clientOptions, databaseName
 }
 
-func Disconnect(client *mongo.Client, logger *zap.Logger, ctx context.Context) {
+func Disconnect(client *mongo.Client, logger otelzap.LoggerWithCtx) {
+	ctx := logger.Context()
 	if err := client.Disconnect(ctx); err != nil {
 		logger.Error("Error during MongoDB disconnect", zap.Error(err))
 	}
