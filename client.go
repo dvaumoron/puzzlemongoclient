@@ -40,8 +40,7 @@ func Create() (*options.ClientOptions, string) {
 }
 
 func Disconnect(client *mongo.Client, logger otelzap.LoggerWithCtx) {
-	ctx := logger.Context()
-	if err := client.Disconnect(ctx); err != nil {
+	if err := client.Disconnect(logger.Context()); err != nil {
 		logger.Error("Error during MongoDB disconnect", zap.Error(err))
 	}
 }
